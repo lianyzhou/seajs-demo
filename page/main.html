@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="/css/reset.css"/>
+		<link rel="stylesheet" href="/css/common.css"/>
+	</head>
+	<body>
+		<div class="W_main">
+			<div class="W_main_news_category" id="pl_newspaper_news_category"></div>
+			<div class="W_main_news_list" id="pl_newspaper_news_content"></div>
+		</div>
+		<script src="/lib/sea.js"></script>
+		<script src="/lib/jquery.js"></script>
+		<script>
+		seajs.config({
+			base : "/",
+			preload : ["lib/sea/plugin-style","lib/sea/plugin-text","common/base"]
+		});
+		seajs.use("page/newspaper" , function(newsPaper) {
+			newsPaper.init();
+		});
+		</script>		
+	</body>
+</html>
