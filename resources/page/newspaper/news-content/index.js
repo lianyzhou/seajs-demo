@@ -1,7 +1,7 @@
 define(function(require,exports,module) {
 	
-	var newsListTpl = require("pl/newspaper/news-content/tpl/newslist.tpl");
-	require("pl/newspaper/news-content/css/news-content.css");
+	var newsListTpl = require("page/newspaper/news-content/tpl/newslist.tpl");
+	require("page/newspaper/news-content/css/news-content.css");
 	
 	var io = require("io/newspaper") , 
 		$el ,

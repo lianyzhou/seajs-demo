@@ -1,6 +1,6 @@
 define(function(require,exports,module) {
-	require("pl/newspaper/news-category/css/news-category.css");
-	var categoryTpl = require("pl/newspaper/news-category/tpl/categorys.tpl");
+	require("page/newspaper/news-category/css/news-category.css");
+	var categoryTpl = require("page/newspaper/news-category/tpl/categorys.tpl");
 	var io = require("io/newspaper") , 
 		$el , 
 		categoryList ,

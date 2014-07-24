@@ -1,0 +1,3 @@
+define("page/newspaper/news-content/css/news-content.css", [], function() {
+    seajs.importStyle(".W_main_news_list{float:left;width:70%;height:100%;overflow-x:hidden;overflow-y:auto;background:#b3d4fc}.W_main_news_list .list{padding:10px 0 0 10px}.W_main_news_list .column{width:170px;float:left;padding-bottom:20px}.W_main_news_list .portlet{margin:0 10px 10px 0;padding:2px}.W_main_news_list .portlet-header{padding:3px;margin-bottom:6px;position:relative}.W_main_news_list .portlet-toggle{position:absolute;top:50%;right:0;margin-top:-8px}.W_main_news_list .portlet-content{padding:5px;height:220px}.W_main_news_list .portlet-content li{margin:10px 0}.W_main_news_list .portlet-placeholder{border:1px dotted #000;margin:0 3px 3px 0;height:250px}");
+});

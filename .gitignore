@@ -9,4 +9,6 @@ classes
 node_modules
 log
 bin
+tmp
+dist
 

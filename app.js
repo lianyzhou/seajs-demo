@@ -13,8 +13,8 @@ app.use(express.methodOverride());
 
 app.use(app.router);
 
-app.get("/service/antrol" , function(req,res) {
-	var html = fs.readFileSync("page/main.html");
+app.get("/antrol" , function(req,res) {
+	var html = fs.readFileSync("main.html");
 	res.header("Content-Type" , "html;charset=UTF-8");
 	res.send(html);
 });
