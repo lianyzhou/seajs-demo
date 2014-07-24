@@ -52,7 +52,8 @@ define(function(require,exports,module) {
 		var html = new EJS({text : newsListTpl}).render({
 			list : newsList
 		});
-		$el.html(html);
+		var $dom = $(html).css("opacity" , 0).animate({opacity:1});
+		$el.empty().append($dom);
 		nodes = $.builder($el);
 		initPlugins();
 	}
