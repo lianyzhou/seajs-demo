@@ -5,7 +5,9 @@ define(function(require,exports,module) {
 		$el , 
 		categoryList ,
 		selectedCategoryList,
-		nodes;
+		nodes , 
+		$selectable ,
+		bakSelected = [];
 	
 	function getCategorys() {
 		io.getNewsCategory().success(function(list) {
@@ -27,16 +29,39 @@ define(function(require,exports,module) {
 			 return item.selected;
 		});
 	}
-	function initPlugins() {
-		$(nodes.listwrap).selectable();
+	
+	function notifyLoadNews() {
 		//选中从接口获取到的数据
 		findSelected();
-		_.each(selectedCategoryList , function(item) {
-			$(nodes['category_' + item.category]).click();
-		});
 		//告诉新闻列表模块，展示新闻
 		var choosenList = _.pluck(selectedCategoryList , 'category');
 		$.publish("newspaper.newscontent.loadnews" , choosenList);
+	}
+	
+	function selectItemChange() {
+		categoryList = [];
+		$(nodes.category).each(function(i,dom) {
+			var selected = false; 
+			if($(dom).hasClass("ui-selected")) {
+				selected = true;
+			}
+			var data = $.getActionData(dom);
+			categoryList.push({
+				category : data.category,
+				name : data.name,
+				selected : selected 
+			});
+		});
+		io.setNewsCategory(categoryList).success(function(msg) {
+			notifyLoadNews();
+		}).error(function(errorMsg) {
+			$.showErrorTip(errorMsg);
+		});
+	}
+	
+	function initPlugins() {
+		$selectable = $(nodes.listwrap).selectable();
+		$selectable.on( "selectablestop", selectItemChange);
 	}
 	function buildTpl() {
 		var html = new EJS({text : categoryTpl}).render({
@@ -45,6 +70,7 @@ define(function(require,exports,module) {
 		$el.html(html);
 		nodes = $.builder($el);
 		initPlugins();
+		notifyLoadNews();
 	}
 	exports.init = function() {
 		parseDOM();

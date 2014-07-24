@@ -12,7 +12,7 @@
 .W_main_news_list .column {
     width: 170px;
     float: left;
-    padding-bottom:100px;
+    padding-bottom:20px;
   }
 .W_main_news_list  .portlet {
     margin: 0 10px 10px 0;
@@ -39,5 +39,5 @@
 .W_main_news_list  .portlet-placeholder {
     border: 1px dotted black;
     margin: 0 3px 3px 0;
-    height:100px;
+    height:250px;
   }

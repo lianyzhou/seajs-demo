@@ -5,6 +5,17 @@ define(function(require,exports,module) {
 			dataType : "json"
 		});
 	}
+	function setNewsCategory(categoryList) {
+		categoryList = categoryList || [];
+		var categoryListStr = JSON.stringify(categoryList);
+		return $.ajax({
+			url : "/news/category",
+			type : "POST",
+			data : {
+				categorys : categoryListStr
+			}
+		});
+	}
 	function getNewsList(categoryList) {
 		if(!$.isArray(categoryList)) {
 			categoryList = [];			
@@ -18,6 +29,19 @@ define(function(require,exports,module) {
 			}
 		});
 	}
+	function setNewsCategoryOrder(newsCategoryOrder) {
+		newsCategoryOrder = newsCategoryOrder || [];
+		var newsCategoryOrderStr = JSON.stringify(newsCategoryOrder);
+		return $.ajax({
+			url : "/news/categoryorder",
+			type : "POST",
+			data : {
+				order : newsCategoryOrderStr
+			}
+		});
+	}
 	exports.getNewsCategory = getNewsCategory;
 	exports.getNewsList = getNewsList;
+	exports.setNewsCategoryOrder = setNewsCategoryOrder;
+	exports.setNewsCategory = setNewsCategory;
 });

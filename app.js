@@ -79,12 +79,60 @@ app.post("/news/category" , function(req,res) {
 	});
 	var syncStr = JSON.stringify(syncData);
 	fs.writeFileSync("appdata/category.json" , syncStr);
+	//还要重写newsorder.json
+	if(fs.existsSync('appdata/newsorder.json')) {
+		var newsorderStr = fs.readFileSync("appdata/newsorder.json");
+		var newsorder = [];
+		try {
+			newsorder = JSON.parse(newsorderStr);
+		} catch(e){}
+		var got_list = _.chain(syncData)
+					  .filter(function(item){ return item.selected; })
+					  .pluck('category')
+					  .value();
+  
+		var flatten = _.flatten(newsorder);
+		//删除掉已经不存在的
+		for(var i = 0 , len = newsorder.length ; i < len ; i++) {
+			for(var j = 0 , jLen = newsorder[i].length ; j < jLen ; j++) {
+				if(_.indexOf(got_list , newsorder[i][j]) === -1) {
+					//删掉这个值
+					newsorder[i].splice(j , 1);
+					j--;
+					jLen--;
+				}
+			}
+		}
+		//添加没有的
+		for(var i = 0 , len = got_list.length ; i < len ; i++) {
+			//看是不是在newsorder里没有
+			if(_.indexOf(flatten , got_list[i]) === -1) {
+				//这种就是要添加到newsorder里面的
+				//找newsorder里面最少的那个数组，添加之
+				var min = _.chain(newsorder).map(function(item) {return item.length}).min().value();
+				var idx = 3;
+				_.find(newsorder , function(arr,i) {
+					if(arr.length === min) {
+						idx = i;
+						return true;
+					}
+				});
+				newsorder[idx].push(got_list[i]);
+			}
+		}
+		fs.writeFileSync("appdata/newsorder.json" , JSON.stringify(newsorder));
+	}
 	res.send("ok");
 	res.end();
 });
 
 app.get("/news/newslist" , function(req,res) {
 	var categorys = req.query.categorys || '';
+	if(!categorys) {
+		res.json([],[],[],[]);
+		res.end();
+		return;
+	}
 	categorys = categorys.split(",");
 	if(categorys.length === 1 && categorys[0] === '') {
 		res.send(500 , "param categorys format error");
@@ -104,36 +152,51 @@ app.get("/news/newslist" , function(req,res) {
 		} catch(e){
 		}
 	}
-	if(orderArr.length) {
-		//对数据进行排序
-		categorys.sort(function(a , b) {
-			var aIdx = _.indexOf(orderArr , a);
-			var bIdx = _.indexOf(orderArr , b);
-			if(aIdx > bIdx) {
-				return 1;
-			} else if(aIdx < bIdx) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}); 
-	}
 	var categoryMap = _.indexBy(newsList , "category");
+	if(!orderArr.length) {
+		/*
+		 * 初始化orderArr,每一个平均放入
+		 * [
+		 * [],
+		 * [],
+		 * [],
+		 * [],
+		 * ]中，顺时针放入
+		*/
+		orderArr = [
+			[],[],[],[]
+		];
+		var idx = -1;
+		_.each(categorys,function(category) {
+			if(categoryMap[category]) {
+				idx ++;
+				if(idx >= 4) {
+					idx = 0;
+				}
+				orderArr[idx].push(category);	
+			}
+		});
+	}
+	
 	var ret = [];
-	_.each(categorys , function(category) {
-		var data = categoryMap[category];
-		if(data) {
-			ret.push(data);
+	
+	for(var i = 0 , len = orderArr.length ; i < len ; i++) {
+		ret[i] = [];
+		for(var j = 0 , jLen = orderArr[i].length ; j < jLen ;  j++) {
+			ret[i].push(categoryMap[orderArr[i][j]]);
 		}
-	});
-	console.log(ret);
+	}
 	res.json(ret);
 	res.end();
 });
 
 app.post("/news/categoryorder" , function(req,res) {
-	var order = req.body.order || "";
-	var orders = order.split(",");
+	var orderQuery = req.body.order || "";
+	var order = [];
+	try {
+		order = JSON.parse(orderQuery);
+	} catch(e){}
+	var orders = _.flatten(order);
 	var errorMsg = "param order format error" ,
 		passCheck = true;
 	if(orders.length === 1 && orders[0] === '') {
@@ -171,7 +234,7 @@ app.post("/news/categoryorder" , function(req,res) {
 		res.end();
 		return;
 	}
-	var orderJsonStr = JSON.stringify(orders);
+	var orderJsonStr = JSON.stringify(order);
 	fs.writeFileSync("appdata/newsorder.json" , orderJsonStr);
 	res.send(200 , "ok");
 });
