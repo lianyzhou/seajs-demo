@@ -1,6 +1,6 @@
-antrol-demo
+seajs-demo
 ===========
-antrol project demo
+seajs project demo
 
-use seajs 
+use seajs and grunt
 
