@@ -23,6 +23,8 @@
 	"grunt-usemin": "2.0.0",
 	"grunt-contrib-concat": "0.3.0",
     "grunt-contrib-cssmin": "0.7.0",
-    "grunt-rev": "0.1.0"
+    "grunt-rev": "0.1.0",
+    "grunt-contrib-imagemin":"0.7.1",
+    "grunt-contrib-htmlmin":"0.3.0"
   }
 }

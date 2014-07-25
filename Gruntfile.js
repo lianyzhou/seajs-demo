@@ -132,6 +132,33 @@ module.exports = function(grunt){
 	         }]
 	       }
         },
+        imagemin : {
+        	dest : {
+        		files : [{
+					expand : true,
+					cwd : '<%= yeoman.dist %>',
+					src : ['**/*.{png,jpg,gif}'],
+					dest : '<%= yeoman.dist %>'
+        		}]
+        	}
+        },
+        htmlmin : {
+        	options: { 
+                collapseWhitespace: true,
+                collapseBooleanAttributes: true,
+                removeCommentsFromCDATA: true,
+                removeOptionalTags: true,
+                minifyJS : true
+	      	},
+			dest : {
+        		files : [{
+					expand : true,
+					cwd : '<%= yeoman.dist %>',
+					src : ['**/*.html'],
+					dest : '<%= yeoman.dist %>'
+        		}]
+        	}        	
+        },
     	clean : {
     		pre : {
     			files: [
@@ -166,6 +193,8 @@ module.exports = function(grunt){
 		    
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-rev');
     grunt.registerTask('build', [
     	'clean:pre'
@@ -177,6 +206,8 @@ module.exports = function(grunt){
 	    ,'rev'
     	,'usemin'
     	,'uglify'
+    	,'imagemin'
+    	,'htmlmin'
     	, 'clean:post'
     ]);
     
