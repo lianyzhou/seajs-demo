@@ -1,4 +1,6 @@
 define(function(require,exports,module) {
+	require("lib/sea/plugin-style");
+	require("lib/sea/plugin-text");
 	require("lib/jquery/asyncbox/asyncbox");
 	require("lib/ejs");
 	require("lib/underscore");

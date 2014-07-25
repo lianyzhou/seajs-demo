@@ -1,3 +1,0 @@
-define("css/common.css", [], function() {
-    seajs.importStyle("body{position:absolute;background:#000;width:100%;height:100%;overflow:hidden}.W_main{width:1200px;height:100%;position:relative;margin:0 auto;background:#fff}");
-});

@@ -14,10 +14,14 @@ app.use(express.methodOverride());
 app.use(app.router);
 
 app.get("/antrol" , function(req,res) {
-	var html = fs.readFileSync("main.html");
+	//var html = fs.readFileSync("resources/main.html");
+	var html = fs.readFileSync("dist/main.html");
 	res.header("Content-Type" , "html;charset=UTF-8");
 	res.send(html);
 });
+
+//app.use(express.static(path.join(__dirname , "resources")));
+app.use(express.static(path.join(__dirname , "dist")));
 
 app.get("/news/category" , function(req,res) {
 	var fileContent = fs.readFileSync("appdata/category.json");
@@ -239,7 +243,7 @@ app.post("/news/categoryorder" , function(req,res) {
 	res.send(200 , "ok");
 });
 
-app.use(express.static(path.join(__dirname , "resources")));
+
 
 app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

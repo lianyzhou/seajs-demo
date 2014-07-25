@@ -8,9 +8,17 @@ module.exports = function(grunt){
 	
 
     grunt.initConfig({
+    	
+    	// Project settings
+        yeoman: {
+            // configurable paths
+            app: './resources',
+            dist: './dist'
+        },
+    	
     	transport :  {
     		options : {
-    			paths : ["resources"],
+    			paths : ["<%= yeoman.app %>"],
     			parsers : {
                     '.js' : [script.jsParser],
                     '.css' : [style.css2jsParser],
@@ -20,7 +28,7 @@ module.exports = function(grunt){
     		},
     		dest : {
 	            files: [{
-	                cwd: 'resources',
+	                cwd: '<%= yeoman.app %>',
 	                src: '**/*',
 	                filter : "isFile",
 	                expand : true,
@@ -50,30 +58,48 @@ module.exports = function(grunt){
     		}
     	},
     	useminPrepare: {
-            html: './main.html',
+            html: '<%= yeoman.app %>/main.html',
             options: {
-                dest: 'dist'
+                dest: '<%= yeoman.dist %>',
+                flow: {
+		           html: {
+		             steps: {
+		               js: ['concat', 'uglifyjs'],
+		               css: ['cssmin']
+		             },
+		             post: {}
+		           }
+		        }
             }
         },
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
-        	html: ['dist/main.html'],
-            css: ['css/{,*/}*.css'],
+            html: ['<%= yeoman.dist %>/*.html'],
+            css: ['<%= yeoman.dist %>/css/{,*/}*.css'],
             options: {
-                assetsDirs: ['dist']
+                assetsDirs: ['<%= yeoman.dist %>' , '<%= yeoman.dist %>/images']
             }
         },
+        cssmin: {
+	       options: {
+	         root: '<%= yeoman.app %>'
+	       }
+	    },
     	copy : {
     		dest : {
     			files : [
                     {
                         expand: true,
-                        cwd: './resources/css',
-                        dest: '.tmp/css/',
-                        src: '{,*/}*.*'
+                        dot: true,
+                        cwd: '<%= yeoman.app %>',
+                        dest: '<%= yeoman.dist %>',
+                        src: [
+                            '*.html',
+                            'images/{,*/}*.{png,jpg,jpeg,gif}'
+                        ]
                     },
 	    			{
-	    				cwd : './resources',
+	    				cwd : '<%= yeoman.app %>',
 	    				src : [
 	    					'lib/sea/{,*/}*.js',
 	                        'lib/jquery.js',
@@ -81,13 +107,53 @@ module.exports = function(grunt){
 	    				],
 	    				expand : true,
 	    				dot: true,
-	    				dest : 'dist'
+	    				dest : '<%= yeoman.dist %>'
 	    			}
 	    		]
     		}
     	},
+    	rev: {
+            dest: {
+                files: {
+                    src: [
+                    	'<%= yeoman.dist %>/css/{,*/}*.css',
+                        '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif}'
+                    ]
+                }
+            }
+        },
+        uglify : {
+	       dest: {
+	         files: [{
+	         	expand : true,
+	         	cwd : '<%= yeoman.dist %>',
+	         	src : ["common/*.js" , "page/*.js"],
+	         	dest : '<%= yeoman.dist %>'
+	         }]
+	       }
+        },
     	clean : {
-    		dest : [".tmp"]
+    		pre : {
+    			files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp',
+                            '<%= yeoman.dist %>'
+                        ]
+                    }
+                ]
+    		},
+    		post : {
+    			files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp',
+                        ]
+                    }
+                ]
+    		}
     	}
     });
 
@@ -98,25 +164,20 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-contrib-clean');
 		    
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-rev');
-    
     grunt.registerTask('build', [
-    
-    	'transport' 
+    	'clean:pre'
+    	,'transport' 
     	,'cmdconcat'
-    	,'copy'
-    	
     	,'useminPrepare'
-    	,'concat'
+	    ,'copy'
 	    ,'cssmin'
-	    ,'uglify'
 	    ,'rev'
     	,'usemin'
-    	
-    	//, 'clean'
+    	,'uglify'
+    	, 'clean:post'
     ]);
     
 }

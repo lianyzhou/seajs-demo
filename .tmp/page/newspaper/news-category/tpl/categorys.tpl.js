@@ -1,1 +1,0 @@
-define("page/newspaper/news-category/tpl/categorys.tpl", [], '<ol node-type="listwrap" class="selectable">\n  <% for(var i=0 , len = list.length; i<len; i++) {%>\n  <li class="ui-widget-content<% if(list[i].selected) {%> ui-selected <%}%>" node-type="category" action-data="category=<%=list[i].category%>&name=<%=list[i].name%>"><%=list[i].name%></li>\n  <%}%>\n</ol>');

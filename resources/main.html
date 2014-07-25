@@ -19,13 +19,31 @@
 		<script src="lib/sea.js"></script>
 		<script src="lib/jquery.js"></script>
 		<script>
-		seajs.config({
-			base : "/",
-			preload : ["lib/sea/plugin-style","lib/sea/plugin-text","common/base"]
-		});
-		seajs.use("page/newspaper" , function(newsPaper) {
-			newsPaper.init();
-		});
+		(function() {
+			
+			var PRODUCTION = true;
+			
+			var JS_VER = "0.0.3";
+						
+			(function() {
+				if(PRODUCTION) {
+					var map = [];
+				    map.push([/^(.*\.(?:js))(.*)$/i, function(e) {
+			    		return e += "?v=" + JS_VER;
+			        }]);
+				    seajs.config({map: map})	
+				}
+			})();			
+			
+			seajs.config({
+				base : "/",
+				preload : ["common/base"]
+			});
+			seajs.use("page/newspaper" , function(newsPaper) {
+				newsPaper.init();
+			});	
+			
+		})();
 		</script>
 	</body>
 </html>
