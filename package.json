@@ -1,7 +1,7 @@
 {
-  "name": "antrol-demo",
+  "name": "seajs-demo",
   "version": "0.0.1",
-  "description": "antrol demo project",
+  "description": "seajs demo project",
   "scripts": {
     "start": "node app.js"
   },
